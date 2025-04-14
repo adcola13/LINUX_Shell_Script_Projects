@@ -1,0 +1,15 @@
+--To view compared contents of 2 files in windows side by side
+--Used for code comparison
+--Assumption: File names are File1.txt and File2.txt
+--To see results of the script, Upload the files File1 and File2 into the directory where you are running the script.
+
+vimdiff File1.txt File2.txt -- for vertical windows
+vimdiff -o File1.txt File2.txt -- for horizontal windows
+:set number 	-- to see line numbers
+:wincmd w  	-- to switch to next window 
+:wincmd W  	-- to switch to previous window
+:diffput 		-- to apply changes from left to right
+:diffget 		-- to apply changes from right to left
+:qa 			-- to exit all the files without saving.
+:q 			-- to exit the files one by one without saving.
+:wq! 			-- to save and exit files one by one.
