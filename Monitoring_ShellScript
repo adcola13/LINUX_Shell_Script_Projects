@@ -1,0 +1,69 @@
+#!/bin/bash
+#Bash Script to monitor any the system
+
+bold=$(tput bold)
+normal=$(tput sgr0)
+echo ${bold}
+echo -e '\E[35m'"\tMONITORING DETAILS OF YOUR SYSTEM"
+if ping -c 1 google.com &> /dev/null
+then
+        echo -e  '\n\E[36m'"Internet:"'\E[32m'" Connected"'\E[0m'
+else
+        echo -e '\n\E[36m' "Internet:"'\E[31m'" Disconnected"'\E[0m'
+fi
+
+#Display OS Name
+echo -e ${bold}'\n\E[36m'"Operating System Type:"'\E[0m' ${bold}$(uname -o)
+
+#Display OS Details
+echo -e ${bold}'\E[36m'"Operating System Details:"'\E[0m'
+echo -e ${bold}"\t"$(grep -E '^(NAME)=' /etc/os-release)
+echo -e "\t"$(grep -E '^(VERSION)=' /etc/os-release)
+echo -e "\t"$(grep -E '^(VENDOR_NAME)=' /etc/os-release)
+echo -e "\t"$(grep -E '^(ID_LIKE)=' /etc/os-release)
+echo -e "\t"$(grep -E '^(PRETTY_NAME)=' /etc/os-release)
+echo -e "\t"$(grep -E '^(SUPPORT_END)=' /etc/os-release)
+
+#Architecture
+echo -e '\n\E[36m'"Architecture:"'\E[0m' ${bold}$(uname -m)
+
+#Display Kernel Release
+echo -e ${bold}'\E[36m'"Kernel Release:"'\E[0m' ${bold}$(uname -r)
+
+#Display Hostname
+echo -e ${bold}'\n\E[36m'"Hostname:"'\E[0m' ${bold}$HOSTNAME
+
+#Display Internal IP
+echo -e ${bold}'\E[36m'"Internal/Private IP:"'\E[0m' ${bold}$(hostname -I)
+
+#Display External IP
+echo -e ${bold}'\E[36m'"External/Public IP:"'\E[0m' ${bold}$(curl -s ipecho.net/plain)
+
+#Display DNS
+echo -e ${bold}'\E[36m'"Domain Name Server:"'\E[0m' ${bold}$(hostname -f)
+
+#Display Logged in users
+who>/tmp/who
+echo -e ${bold}'\n\E[36m'"Logged In Users:"'\E[0m' ${bold}$(who | awk '{print $1 $2}')
+
+#Display Current User
+echo -e ${bold}'\E[36m'"Current User:"'\E[0m' ${bold}$(whoami)
+
+#Display RAM and SWAP Usages
+echo -e ${bold}'\n\E[36m'"RAM Memory Usage:\n"'\E[0m' ${bold}$(free -h | grep -v "Mem\|Swap")
+echo -e ${bold}$(free -h | grep "Mem")
+echo -e ${bold}'\E[36m'"SWAP Memory Usage:\n"'\E[0m' ${bold}$(free -h | grep -v "Mem\|Swap")
+echo -e ${bold}$(free -h | grep "Swap")
+
+# Display Disk Usage
+echo -e ${bold}'\n\E[36m'"Disk Usage:"'\E[0m'
+echo -e ${bold}$(df -h | grep "Filesystem")
+echo -e ${bold}$(df -h | grep "/dev/xvda1 ")
+
+# Display Load Average
+echo -e ${bold}'\n\E[36m'"Load Average:"'\E[0m'${bold}$(top -n 1 -b | grep "load average:" |awk '{print $12, $13, $14}')
+
+# Display System Uptime
+echo -ne ${bold}'\E[36m'"System Uptime in Days /(HH:MM):"'\E[0m' ${bold}$(uptime | awk '{print $3 $4}' | cut -d , -f 1)
+echo -e ${bold} " /" $(uptime | awk '{print $5}' | cut -d , -f 1)
+echo ${normal}
